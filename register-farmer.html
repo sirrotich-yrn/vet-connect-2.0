@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Register as a farmer — VetConnect Kenya</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21c-4-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7.5-7 10Z" stroke="#F5F1E4" stroke-width="1.6"/>
+        </svg>
+      </span>
+      <span class="brand-name">VetConnect<small>Kenya</small></span>
+    </a>
+    <nav class="main-nav"><a href="index.html">Home</a></nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-outline">Log in</a>
+      <a href="register-vet.html" class="btn btn-accent">I'm a vet</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="auth-shell">
+  <aside class="auth-aside">
+    <div>
+      <span class="eyebrow" style="color:var(--ochre-light);">For farmers</span>
+      <h2>Care for your animals shouldn't depend on who you happen to know.</h2>
+      <p>Register once, then request a vet whenever you need one — routine or emergency.</p>
+      <ul class="aside-points">
+        <li>📍 Matched to vets already working near your farm</li>
+        <li>🕐 Emergency requests get priority handling, any hour</li>
+        <li>📋 Every visit is saved to your animals' health record</li>
+      </ul>
+    </div>
+    <p style="font-size:0.8rem; color:rgba(245,241,228,0.5);">VetConnect Kenya — built for smallholder and commercial farms alike.</p>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-form-wrap">
+      <span class="eyebrow">Farmer account</span>
+      <h1>Create your farmer account</h1>
+      <p>It takes about a minute — you can request a vet as soon as you're done.</p>
+
+      <form id="farmer-register-form">
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input id="fullName" name="fullName" type="text" placeholder="e.g. Wanjiru Kamau" required />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="phone">Phone number</label>
+            <input id="phone" name="phone" type="tel" placeholder="07XX XXX XXX" required />
+          </div>
+          <div class="field">
+            <label for="county">County</label>
+            <select id="county" name="location">
+              <option>Nairobi</option>
+              <option>Kajiado</option>
+              <option>Nakuru</option>
+              <option>Kiambu</option>
+              <option>Meru</option>
+              <option>Kakamega</option>
+              <option>Marsabit</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="animals">Animals you keep</label>
+          <select id="animals" name="animals">
+            <option>Cattle (dairy)</option>
+            <option>Cattle (beef)</option>
+            <option>Goats / sheep</option>
+            <option>Poultry</option>
+            <option>Mixed livestock</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="email">Email (optional)</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" />
+        </div>
+        <input type="hidden" name="lat" /><input type="hidden" name="lng" />
+        <button type="button" class="btn btn-outline btn-block loc-btn" data-get-location>📍 Use my location</button>
+        <div class="field">
+          <label for="password">Create a password</label>
+          <input id="password" name="password" type="password" placeholder="At least 8 characters" required minlength="8" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Create account</button>
+      </form>
+      <p class="form-foot">Already have an account? <a href="login.html">Log in</a></p>
+      <p class="form-note">Your location is only used to match you with vets near your farm.</p>
+    </div>
+  </main>
+</div>
+
+<script src="script.js"></script>
+<script>initRegisterForm('#farmer-register-form', 'farmer');</script>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VetConnect Kenya — Veterinary care for every herd</title>
+<meta name="description" content="Connect Kenyan farmers with verified veterinarians for routine and emergency livestock care, anywhere in the country." />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21c-4-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7.5-7 10Z" stroke="#F5F1E4" stroke-width="1.6"/>
+          <path d="M12 12v5" stroke="#F5F1E4" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M9 9c0-1.7 1.3-3 3-3s3 1.3 3 3" stroke="#F5F1E4" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="brand-name">VetConnect<small>Kenya</small></span>
+    </a>
+    <nav class="main-nav">
+      <a href="#audience">Farmers &amp; vets</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#farm-notes">Farm notes</a>
+    </nav>
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-outline">Log in</a>
+      <a href="register-farmer.html" class="btn btn-primary">For farmers</a>
+      <a href="register-vet.html" class="btn btn-accent">For vets</a>
+    </div>
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">Livestock health, on call</span>
+      <h1>Get a vet's attention, wherever your animal is.</h1>
+      <p class="lede">VetConnect matches farmers with verified, nearby veterinarians for routine visits and emergencies — from a dairy unit in Kiambu to a boma in Marsabit.</p>
+      <div class="hero-actions">
+        <a href="register-farmer.html" class="btn btn-primary btn-lg">Request a vet</a>
+        <a href="register-vet.html" class="btn btn-outline btn-lg">Join as a veterinarian</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">500+</div><div class="label">Registered vets</div></div>
+        <div class="hero-stat"><div class="num">2,000+</div><div class="label">Farmers served</div></div>
+        <div class="hero-stat"><div class="num">47</div><div class="label">Counties covered</div></div>
+      </div>
+    </div>
+    <div class="card-stack" aria-hidden="true">
+      <div class="record-card c1">
+        <div class="tag">Routine visit</div>
+        <div class="title">Dairy herd checkup</div>
+        <div class="meta">Nakuru County · confirmed</div>
+        <div class="stamp">🐄</div>
+      </div>
+      <div class="record-card c2">
+        <div class="tag">Emergency</div>
+        <div class="title">Goat in labour</div>
+        <div class="meta">Kajiado County · vet en route</div>
+        <div class="stamp">🐐</div>
+      </div>
+      <div class="record-card c3">
+        <div class="tag">Vaccination</div>
+        <div class="title">Poultry, Newcastle disease</div>
+        <div class="meta">Kakamega County · completed</div>
+        <div class="stamp">🐓</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="audience">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Two sides, one connection</span>
+      <h2>Built around what each side actually needs</h2>
+      <p>Farmers need care they can trust to arrive. Vets need a steady stream of relevant, well-matched work. VetConnect is the link between them.</p>
+    </div>
+    <div class="audience-grid">
+      <div class="audience-card for-farmer">
+        <h3>For farmers</h3>
+        <p class="sub">Request care for any animal, at any time, and know who is coming.</p>
+        <ul class="audience-list">
+          <li><span class="dot">📍</span> See vets available near your farm before you request one</li>
+          <li><span class="dot">⏱</span> Flag an emergency for priority matching, day or night</li>
+          <li><span class="dot">📋</span> Keep a running health record for every animal you own</li>
+        </ul>
+        <a href="register-farmer.html" class="btn btn-primary btn-block">Register as a farmer</a>
+      </div>
+      <div class="audience-card for-vet">
+        <h3>For veterinarians</h3>
+        <p class="sub">Fill your schedule with farmers already looking for a vet like you.</p>
+        <ul class="audience-list">
+          <li><span class="dot">🗺</span> Set your service area and working hours yourself</li>
+          <li><span class="dot">🛡</span> Show farmers a verified licence, not just a phone number</li>
+          <li><span class="dot">🗂</span> Log treatments and prescriptions without paper files</li>
+        </ul>
+        <a href="register-vet.html" class="btn btn-accent btn-block">Register as a veterinarian</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" style="background: var(--sand-deep);">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">From request to recovery</span>
+      <h2>Four steps, start to finish</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-index">01</div>
+        <h4>Share your location</h4>
+        <p>Turn on location, or pick your county and ward, so nearby vets can see your request.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-index">02</div>
+        <h4>Describe the case</h4>
+        <p>Tell us the animal, the symptoms, and how urgent it is — that's what drives the match.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-index">03</div>
+        <h4>Get matched</h4>
+        <p>A qualified, available vet in your area accepts the request and confirms a time.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-index">04</div>
+        <h4>Care, then a record</h4>
+        <p>The vet treats the animal and logs the visit to your farm's health record automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="farm-notes" class="notes-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Farm notes</span>
+      <h2>Livestock knowledge worth keeping in mind</h2>
+      <p>Short, practical notes drawn from Kenyan veterinary and agricultural sources — a rotating reminder while you're here.</p>
+    </div>
+    <div class="notes-carousel" data-notes>
+      <div class="notes-track">
+        <div class="note-slide active">
+          <div class="note-icon">💉</div>
+          <div>
+            <h3>Vaccine schedules aren't one-size-fits-all</h3>
+            <p>Foot-and-mouth disease protection in cattle only lasts around six months, so it needs a booster roughly twice a year — while a single dose against PPR can protect sheep and goats for life.</p>
+            <span class="note-source">Kenya Veterinary Vaccines Production Institute</span>
+          </div>
+        </div>
+        <div class="note-slide">
+          <div class="note-icon">🗺</div>
+          <div>
+            <h3>Vaccination priorities differ by region</h3>
+            <p>National campaigns tend to target foot-and-mouth disease in dairy areas and PPR in arid and semi-arid zones, since an outbreak can trigger quarantines that stop a farmer from selling animals at all.</p>
+            <span class="note-source">Ministry of Agriculture and Livestock Development</span>
+          </div>
+        </div>
+        <div class="note-slide">
+          <div class="note-icon">🐓</div>
+          <div>
+            <h3>Village poultry can skip the cold chain</h3>
+            <p>A heat-stable strain of Newcastle disease vaccine lets free-range chickens be protected from about a week old, with boosters roughly every three months, without needing refrigeration in the field.</p>
+            <span class="note-source">AfroTools agricultural data</span>
+          </div>
+        </div>
+        <div class="note-slide">
+          <div class="note-icon">🪱</div>
+          <div>
+            <h3>Deworm before you vaccinate</h3>
+            <p>An animal carrying a heavy parasite load mounts a weaker immune response to a vaccine, so leaving one to two weeks between deworming and vaccination gets more out of both.</p>
+            <span class="note-source">Agriculture.Institute best-practice notes</span>
+          </div>
+        </div>
+        <div class="note-slide">
+          <div class="note-icon">🌾</div>
+          <div>
+            <h3>Dry-season feed shortages are predictable</h3>
+            <p>Smallholder herds that rely on Napier grass and crop residue tend to run short around September and October — farmers who bank surplus feed as hay or silage in the wet season ride that gap out more easily.</p>
+            <span class="note-source">Smallholder dairy feeding research, semi-arid Kenya</span>
+          </div>
+        </div>
+        <div class="note-slide">
+          <div class="note-icon">🌿</div>
+          <div>
+            <h3>Fodder trees can rival concentrate feed</h3>
+            <p>Calliandra, a fodder shrub grown across East Africa, carries protein levels close to commercial dairy concentrate and has been linked to a real lift in milk income where farmers plant enough of it.</p>
+            <span class="note-source">Dairy nutrition research, Nyeri and Meru counties</span>
+          </div>
+        </div>
+        <div class="note-slide">
+          <div class="note-icon">🦟</div>
+          <div>
+            <h3>Time skin-disease vaccines around the rains</h3>
+            <p>Cattle are usually first vaccinated against Lumpy Skin Disease around six months old, with a yearly booster best given just before the rains, when biting insects that spread the virus are most active.</p>
+            <span class="note-source">Livestock vaccine guidance, Kenyan farm advisories</span>
+          </div>
+        </div>
+        <div class="note-slide">
+          <div class="note-icon">🌡</div>
+          <div>
+            <h3>The cold chain is where programs quietly fail</h3>
+            <p>Most vaccines need to stay between about 2°C and 8°C from purchase to injection — a gap in that chain is one of the most common, least visible reasons a vaccination doesn't take.</p>
+            <span class="note-source">Livestock vaccination guidance, Kenyan farm advisories</span>
+          </div>
+        </div>
+      </div>
+      <div class="notes-controls">
+        <button class="notes-nav-btn" data-notes-prev aria-label="Previous tip">‹</button>
+        <div class="notes-dots"></div>
+        <button class="notes-nav-btn" data-notes-next aria-label="Next tip">›</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--<section>
+  <div class="container">
+    <div class="cta-banner">
+      <div>
+        <h3>Your herd's next checkup shouldn't wait on a phone tree.</h3>
+        <p>Set up your account in a couple of minutes and put a name to the vet who'll answer your next call.</p>
+      </div>
+      <div class="cta-banner-actions">
+        <a href="register-farmer.html" class="btn btn-accent btn-lg">Get started as a farmer</a>
+        <a href="register-vet.html" class="btn btn-ghost-light btn-lg">Get started as a vet</a>
+      </div>
+    </div>
+  </div>
+</section>
+-->
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="brand">
+          <span class="brand-mark">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 21c-4-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7.5-7 10Z" stroke="#F5F1E4" stroke-width="1.6"/>
+            </svg>
+          </span>
+          <span class="brand-name">VetConnect<small>Kenya</small></span>
+        </a>
+        <p>Connecting Kenyan farmers with verified veterinary care, county by county.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Farmers</h4>
+        <ul>
+          <li><a href="register-farmer.html">Request a vet</a></li>
+          <li><a href="login.html">Log in</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Veterinarians</h4>
+        <ul>
+          <li><a href="register-vet.html">Join the network</a></li>
+          <li><a href="login.html">Log in</a></li>
+          <li><a href="#audience">Why join</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <p>Nairobi, Kenya</p>
+        <p>+254 700 299 517</p>
+        <p>support@vetconnect.co.ke</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 VetConnect Kenya. All rights reserved.</p>
+      <div class="footer-legal">
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of service</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+// If already signed in, swap the auth buttons for a dashboard link
+(function(){const u=Session.user;if(!u||!Session.token)return;const a=document.querySelector('.header-actions');
+a.innerHTML='<a href="'+Session.home(u.role)+'" class="btn btn-primary">Open my dashboard</a><a href="#" class="btn btn-outline" id="lo">Log out</a>';
+document.getElementById('lo').onclick=e=>{e.preventDefault();Session.clear();location.reload();};})();
+</script>
+</body>
+</html>

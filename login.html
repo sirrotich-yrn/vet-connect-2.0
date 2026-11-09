@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Log in — VetConnect Kenya</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21c-4-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7.5-7 10Z" stroke="#F5F1E4" stroke-width="1.6"/>
+        </svg>
+      </span>
+      <span class="brand-name">VetConnect<small>Kenya</small></span>
+    </a>
+    <nav class="main-nav"><a href="index.html">Home</a></nav>
+    <!--<div class="header-actions">
+      <a href="register-farmer.html" class="btn btn-primary">For farmers</a>
+      <a href="register-vet.html" class="btn btn-accent">For vets</a>
+    </div>
+  -->
+    <button class="nav-toggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="auth-shell">
+  <aside class="auth-aside">
+    <div>
+      <span class="eyebrow" style="color:var(--ochre-light);">Welcome back</span>
+      <h2>One account, whichever side of the herd you're on.</h2>
+      <p>Log in to see your requests, your matches, and your animals' records in one place.</p>
+    </div>
+  </aside>
+
+  <main class="auth-main">
+    <div class="auth-form-wrap">
+      <span class="eyebrow">Log in</span>
+      <h1>Welcome back</h1>
+      <p>Tell us which kind of account this is, then sign in.</p>
+
+     <!--<div class="role-toggle">
+        <button type="button" data-role-option="farmer">I'm a farmer</button>
+        <button type="button" data-role-option="vet">I'm a veterinarian</button>
+      </div>
+    -->
+
+      <form id="login-form">
+        <div class="field">
+          <label for="identifier">Phone number or email</label>
+          <input id="identifier" name="identifier" type="text" placeholder="07XX XXX XXX or you@example.com" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Your password" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Log in</button>
+      </form>
+      <p class="form-foot">New here? <a href="register-farmer.html">Register as a farmer</a> or <a href="register-vet.html">as a vet</a></p>
+      
+    </div>
+  </main>
+</div>
+
+<script src="script.js"></script>
+<script>initLoginForm();</script>
+</body>
+</html>

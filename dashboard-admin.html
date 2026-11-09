@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin — VetConnect Kenya</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21c-4-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7.5-7 10Z" stroke="#F5F1E4" stroke-width="1.6"/></svg></span>
+      <span class="brand-name">VetConnect<small>Kenya</small></span>
+    </a>
+    <div class="header-actions"><span style="font-size:.85rem;color:var(--muted)"><span class="live-dot"></span>Live</span><a href="#" data-logout class="btn btn-outline">Log out</a></div>
+  </div>
+</header>
+
+<div class="dash-shell">
+  <aside class="dash-side">
+    <div class="who"><div class="name" data-user-name>Admin</div><div class="role">Administrator</div></div>
+    <a class="dash-link" data-view="overview">🏠 Overview</a>
+    <a class="dash-link" data-view="records">🗂 Service records</a>
+    <a class="dash-link" data-view="requests">📨 All requests</a>
+    <a class="dash-link" data-view="users">👥 Farmers &amp; vets</a>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header"><div><h1>Administration</h1><p>Every service delivered, in one searchable record.</p></div></div>
+
+    <section data-panel="overview">
+      <div class="dash-grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="stat-card"><div class="num" id="s-farmers">–</div><div class="label">Farmers</div></div>
+        <div class="stat-card"><div class="num" id="s-vets">–</div><div class="label">Vets</div></div>
+        <div class="stat-card"><div class="num" id="s-open">–</div><div class="label">Open requests</div></div>
+        <div class="stat-card"><div class="num" id="s-recs">–</div><div class="label">Service records</div></div>
+      </div>
+      <div class="panel"><h3>Upcoming follow-up visits</h3><div id="followups"></div></div>
+    </section>
+
+    <section data-panel="records">
+      <div class="panel">
+        <div class="toolbar"><input id="q" placeholder="🔍 Search farmer, diagnosis, treatment, animal…" /><button class="btn btn-primary btn-sm" id="btn-add">+ New record</button></div>
+        <div class="table-wrap"><table class="data"><thead><tr><th>Date</th><th>Farmer</th><th>Animal</th><th>Diagnosis</th><th>Treatment</th><th>Follow-up</th><th>Vet</th><th></th></tr></thead><tbody id="rec-body"></tbody></table></div>
+      </div>
+    </section>
+
+    <section data-panel="requests"><div class="panel"><h3>All requests</h3><div class="table-wrap"><table class="data"><thead><tr><th>When</th><th>Farmer</th><th>Animal</th><th>Problem</th><th>Urgency</th><th>Status</th><th>Vet</th></tr></thead><tbody id="req-body"></tbody></table></div></div></section>
+
+    <section data-panel="users"><div class="panel"><h3>Registered users</h3><div class="table-wrap"><table class="data"><thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>County</th><th>Details</th></tr></thead><tbody id="user-body"></tbody></table></div></div></section>
+  </main>
+</div>
+
+<!-- Record editor -->
+<div class="modal-backdrop" id="rec-modal">
+  <div class="modal-box wide">
+    <h3 id="rec-title">New service record</h3>
+    <form id="rec-form">
+      <input type="hidden" name="id" />
+      <div class="grid-2">
+        <div class="field"><label>Farmer</label><select name="farmer_id" id="f-farmer" required></select></div>
+        <div class="field"><label>Veterinary officer</label><select name="vet_id" id="f-vet"></select></div>
+      </div>
+      <div class="field"><label>Animal information</label><input name="animal_info" placeholder="Species, name/tag, age, sex" /></div>
+      <div class="field"><label>Diagnosis</label><textarea name="diagnosis" required></textarea></div>
+      <div class="field"><label>Treatment given</label><textarea name="treatment" required></textarea></div>
+      <div class="grid-2">
+        <div class="field"><label>Follow-up visit</label><input type="date" name="follow_up_date" /></div>
+        <div class="field"><label>Notes</label><input name="notes" /></div>
+      </div>
+      <div class="modal-actions"><button type="button" class="btn btn-outline" data-close-modal>Cancel</button><button class="btn btn-primary">Save record</button></div>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+const me = requireRole('admin');
+let users = [], records = [];
+const show = initTabs(v => { if (v === 'records') loadRecords(); if (v === 'requests') loadRequests(); });
+const fmtDate = s => new Date(s.replace(' ', 'T') + 'Z').toLocaleDateString();
+
+async function loadOverview() {
+  const o = await api('/admin/overview'); users = o.users;
+  $('#s-farmers').textContent = o.farmers; $('#s-vets').textContent = o.vets; $('#s-open').textContent = o.open_requests; $('#s-recs').textContent = o.records;
+  $('#followups').innerHTML = o.followups.map(f => `<div class="list-row"><span>📅 <b>${esc(f.follow_up_date)}</b> — ${esc(f.farmer_name)} · ${esc(f.animal_label || 'Animal')} (${esc(f.farmer_phone || '')})</span><span class="pill progress">Follow-up</span></div>`).join('') || '<div class="empty">No follow-ups scheduled.</div>';
+  $('#user-body').innerHTML = users.map(u => `<tr><td>${esc(u.name)}</td><td><span class="pill ${u.role === 'vet' ? 'done' : 'progress'}">${u.role}</span></td><td>${esc(u.phone || '')}</td><td>${esc(u.county || '')}</td><td>${u.role === 'vet' ? esc((u.specialty || '') + ' · ' + (u.license || '')) : ''}</td></tr>`).join('');
+  $('#f-farmer').innerHTML = '<option value="">Select farmer…</option>' + users.filter(u => u.role === 'farmer').map(u => `<option value="${u.id}">${esc(u.name)} (${esc(u.county || '')})</option>`).join('');
+  $('#f-vet').innerHTML = '<option value="">— none —</option>' + users.filter(u => u.role === 'vet').map(u => `<option value="${u.id}">${esc(u.name)}</option>`).join('');
+}
+async function loadRecords() {
+  records = await api('/records?q=' + encodeURIComponent($('#q').value));
+  $('#rec-body').innerHTML = records.map(r => `<tr><td>${fmtDate(r.created_at)}</td><td>${esc(r.farmer_name)}<br><small>${esc(r.farmer_phone || '')}</small></td><td>${esc(r.animal_label || '—')}</td><td>${esc(r.diagnosis || '')}</td><td>${esc(r.treatment || '')}</td><td>${esc(r.follow_up_date || '—')}</td><td>${esc(r.vet_name || '—')}</td>
+    <td style="white-space:nowrap"><button class="btn btn-outline btn-sm" data-edit="${r.id}">Edit</button> <button class="btn btn-outline btn-sm" data-del="${r.id}">Delete</button></td></tr>`).join('') || '<tr><td colspan="8" class="empty">No records found.</td></tr>';
+}
+async function loadRequests() {
+  const rows = await api('/requests');
+  $('#req-body').innerHTML = rows.map(r => `<tr><td>${timeAgo(r.created_at)}</td><td>${esc(r.farmer_name)}</td><td>${esc(r.species)}</td><td>${esc(r.problem)}</td><td>${urgencyPill(r.urgency) || 'routine'}</td><td>${statusPill(r.status)}</td><td>${esc(r.vet_name || '—')}</td></tr>`).join('') || '<tr><td colspan="7" class="empty">No requests.</td></tr>';
+}
+
+let t; $('#q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(loadRecords, 250); });
+$('#btn-add').onclick = () => { $('#rec-form').reset(); $('#rec-form [name=id]').value = ''; $('#rec-title').textContent = 'New service record'; $('#rec-modal').classList.add('open'); };
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-edit],[data-del]'); if (!b) return;
+  if (b.dataset.edit) {
+    const r = records.find(x => x.id == b.dataset.edit), f = $('#rec-form');
+    f.reset(); $('#rec-title').textContent = 'Edit service record';
+    ['id', 'farmer_id', 'vet_id', 'animal_info', 'diagnosis', 'treatment', 'follow_up_date', 'notes'].forEach(k => { f.elements[k].value = (k === 'animal_info' ? (r.animal_info || r.animal_label) : r[k]) ?? ''; });
+    $('#rec-modal').classList.add('open');
+  } else if (confirm('Delete this record permanently?')) {
+    try { await api('/records/' + b.dataset.del, 'DELETE'); toast('Record deleted'); loadRecords(); loadOverview(); } catch (err) { toast(err.message, 'err'); }
+  }
+});
+$('#rec-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(e.target)), id = d.id; delete d.id;
+  try { await api(id ? '/records/' + id : '/records', id ? 'PUT' : 'POST', d); $('#rec-modal').classList.remove('open'); toast('Record saved'); loadRecords(); loadOverview(); } catch (err) { toast(err.message, 'err'); }
+});
+
+connectRealtime({
+  'record:changed': () => { loadRecords(); loadOverview(); },
+  'request:update': () => { if (!$('[data-panel=requests]').hidden) loadRequests(); loadOverview(); }
+});
+loadOverview().then(loadRecords);
+</script>
+</body>
+</html>

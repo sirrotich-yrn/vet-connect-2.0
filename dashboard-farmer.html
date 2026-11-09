@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — VetConnect Kenya</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21c-4-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7.5-7 10Z" stroke="#F5F1E4" stroke-width="1.6"/></svg></span>
+      <span class="brand-name">VetConnect<small>Kenya</small></span>
+    </a>
+    <div class="header-actions"><span style="font-size:.85rem;color:var(--muted)"><span class="live-dot"></span>Live</span><a href="#" data-logout class="btn btn-outline">Log out</a></div>
+  </div>
+</header>
+
+<div class="dash-shell">
+  <aside class="dash-side">
+    <div class="who"><div class="name" data-user-name>Farmer</div><div class="role">Farmer account</div></div>
+    <a class="dash-link" data-view="overview">🏠 Overview</a>
+    <a class="dash-link" data-view="requests">📨 My requests <span class="count" id="c-req"></span></a>
+    <a class="dash-link" data-view="animals">🐄 My animals</a>
+    <a class="dash-link" data-view="vets">📍 Vets near me</a>
+    <a class="dash-link" data-view="records">📋 Health records</a>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header">
+      <div><h1>Welcome, <span data-user-name>Farmer</span></h1><p>Requests update here the moment a vet responds.</p></div>
+      <button class="btn btn-accent" id="btn-emergency">❤️ Emergency request</button>
+    </div>
+    <div class="banner-tip" data-welcome-banner style="display:none;"><span class="icon">🎉</span><div><h4>Your account is ready</h4><p>Add your animals, then request a vet — nearby vets are alerted instantly.</p></div></div>
+
+    <section data-panel="overview">
+      <div class="dash-grid">
+        <div class="stat-card"><div class="num" id="s-active">–</div><div class="label">Active requests</div></div>
+        <div class="stat-card"><div class="num" id="s-animals">–</div><div class="label">Animals on record</div></div>
+        <div class="stat-card"><div class="num" id="s-vets">–</div><div class="label">Vets available near you</div></div>
+      </div>
+      <div class="quick-grid">
+        <button class="quick-action" id="qa-emergency"><span class="icon">❤️</span><span class="title">Request emergency care</span><span class="desc">Priority alert to the closest vets</span></button>
+        <button class="quick-action" id="qa-routine"><span class="icon">🕐</span><span class="title">Book a routine visit</span><span class="desc">Checkups, vaccinations, deworming</span></button>
+      </div>
+      <div class="panel"><h3>Recent requests</h3><div id="recent"></div></div>
+    </section>
+
+    <section data-panel="requests">
+      <div class="panel"><div class="head"><h3>My requests</h3><button class="btn btn-primary btn-sm" id="btn-new">+ New request</button></div><div id="req-list"></div></div>
+    </section>
+
+    <section data-panel="animals">
+      <div class="panel">
+        <h3>Add an animal</h3>
+        <form id="animal-form" class="grid-2" style="margin-top:.8rem">
+          <select name="species" required><option value="">Species…</option><option>Cattle (dairy)</option><option>Cattle (beef)</option><option>Goat</option><option>Sheep</option><option>Poultry</option><option>Pig</option><option>Donkey</option><option>Other</option></select>
+          <input name="name" placeholder="Name or herd (e.g. Malaika)" />
+          <input name="tag" placeholder="Tag number (optional)" />
+          <input name="age" placeholder="Age (e.g. 3 years)" />
+          <button class="btn btn-primary" style="grid-column:1/-1">Save animal</button>
+        </form>
+      </div>
+      <div class="panel"><h3>Your animals</h3><div id="animal-list"></div></div>
+    </section>
+
+    <section data-panel="vets">
+      <div class="panel">
+        <div class="head"><h3>Vets near you</h3><button class="btn btn-outline btn-sm" id="btn-relocate">📍 Update my location</button></div>
+        <p style="font-size:.88rem;margin-bottom:.6rem">Sorted by distance from your saved location. Availability updates live.</p>
+        <div id="vet-list"></div>
+      </div>
+    </section>
+
+    <section data-panel="records">
+      <div class="panel"><h3>Health records</h3><p style="font-size:.88rem;margin-bottom:.6rem">Diagnosis, treatment and follow-ups logged by your vet.</p><div id="rec-list"></div></div>
+    </section>
+  </main>
+</div>
+
+<!-- New request -->
+<div class="modal-backdrop" id="req-modal">
+  <div class="modal-box wide">
+    <h3>Request a vet</h3>
+    <p>Tell us about the animal and the problem. Vets within range are alerted right away.</p>
+    <form id="req-form">
+      <div class="field"><label>Which animal?</label><select name="animal_id" id="rf-animal"></select></div>
+      <div class="field"><label>Species / type</label>
+        <select name="species" id="rf-species" required><option>Cattle (dairy)</option><option>Cattle (beef)</option><option>Goat</option><option>Sheep</option><option>Poultry</option><option>Pig</option><option>Donkey</option><option>Other</option></select></div>
+      <div class="field"><label>What is the problem?</label><textarea name="problem" placeholder="Symptoms, how long, how many animals affected…" required></textarea></div>
+      <div class="field"><label>How urgent?</label>
+        <div class="urgency-row">
+          <label><input type="radio" name="urgency" value="routine" checked /> 🕐 Routine</label>
+          <label><input type="radio" name="urgency" value="urgent" /> ⚠️ Urgent</label>
+          <label><input type="radio" name="urgency" value="emergency" /> ❤️ Emergency</label>
+        </div></div>
+      <div class="field"><label>Where are the animals?</label>
+        <input type="hidden" name="lat" /><input type="hidden" name="lng" />
+        <button type="button" class="btn btn-outline btn-block loc-btn" data-get-location style="margin-bottom:.5rem">📍 Use my current location</button>
+        <input name="location_text" placeholder="Landmark / village / directions (e.g. past Rongai petrol station)" /></div>
+      <div class="modal-actions"><button type="button" class="btn btn-outline" data-close-modal>Cancel</button><button class="btn btn-primary" type="submit">Send request</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Chat -->
+<div class="modal-backdrop" id="chat-modal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;gap:1rem"><div><h3 id="chat-title" style="margin:0">Chat</h3><div id="chat-sub" style="font-size:.82rem;color:var(--muted)"></div></div><button class="btn btn-outline btn-sm" data-chat-close>Close</button></div>
+    <div id="chat-log"></div>
+    <div id="chat-advice-wrap" hidden></div><div id="chat-appt-wrap" hidden></div>
+    <form id="chat-form"><input type="text" id="chat-input" placeholder="Type a message…" autocomplete="off" /><button class="btn btn-primary">Send</button></form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+const me = requireRole('farmer');
+let animals = [], requests = [], vets = [];
+const show = initTabs(v => { if (v === 'records') loadRecords(); });
+
+async function loadAnimals() {
+  animals = await api('/animals');
+  $('#s-animals').textContent = animals.length;
+  $('#animal-list').innerHTML = animals.length ? animals.map(a => `<div class="list-row"><span>🐾 <b>${esc(a.species)}</b> ${esc(a.name || '')} ${a.tag ? '· #' + esc(a.tag) : ''} ${a.age ? '· ' + esc(a.age) : ''}</span><button class="btn btn-outline btn-sm" data-del="${a.id}">Remove</button></div>`).join('') : '<div class="empty">No animals yet — add your first above.</div>';
+  $('#rf-animal').innerHTML = '<option value="">Not listed / whole flock</option>' + animals.map(a => `<option value="${a.id}" data-species="${esc(a.species)}">${esc(a.species)} ${esc(a.name || '')}</option>`).join('');
+}
+function reqCard(r) {
+  const act = ['pending', 'accepted', 'in_progress'].includes(r.status);
+  return `<div class="req-card ${r.urgency}">
+    <div class="req-top"><div><div class="req-title">${esc(r.species)} — ${esc(r.problem)}</div>
+      <div class="req-meta">${timeAgo(r.created_at)} · ${r.vet_name ? '🩺 ' + esc(r.vet_name) : 'Waiting for a vet'}${r.scheduled_at ? ' · 📅 ' + esc(r.scheduled_at.replace('T', ' ')) : ''}</div></div>
+      <div>${urgencyPill(r.urgency)} ${statusPill(r.status)}</div></div>
+    <div class="req-actions">${r.vet_id ? `<button class="btn btn-primary btn-sm" data-chat="${r.id}">💬 Chat</button>` : ''}${act ? `<button class="btn btn-outline btn-sm" data-cancel="${r.id}">Cancel</button>` : ''}</div></div>`;
+}
+function renderRequests() {
+  const active = requests.filter(r => ['pending', 'accepted', 'in_progress'].includes(r.status));
+  $('#s-active').textContent = active.length; $('#c-req').textContent = active.length || '';
+  const none = '<div class="empty">No requests yet.</div>';
+  $('#req-list').innerHTML = requests.map(reqCard).join('') || none;
+  $('#recent').innerHTML = requests.slice(0, 3).map(r => `<div class="list-row"><span>${esc(r.species)} — ${esc(r.problem.slice(0, 50))}</span>${statusPill(r.status)}</div>`).join('') || none;
+}
+async function loadRequests() { requests = await api('/requests'); renderRequests(); }
+async function loadVets() {
+  vets = await api('/vets/nearby?all=1');
+  const avail = vets.filter(v => v.available);
+  $('#s-vets').textContent = avail.length;
+  $('#vet-list').innerHTML = vets.map(v => `<div class="vet-card"><div><b>${esc(v.name)}</b> ${v.available ? '<span class="pill done">Available</span>' : '<span class="pill cancelled">Unavailable</span>'}
+    <div class="req-meta">${esc(v.specialty || 'General practice')} · ${esc(v.county || '')} · ${esc(v.phone || '')}</div></div><div class="dist">${v.distance_km} km</div></div>`).join('') || '<div class="empty">No vets within range yet. Try updating your location.</div>';
+}
+async function loadRecords() {
+  const rows = await api('/records');
+  $('#rec-list').innerHTML = rows.map(r => `<div class="req-card"><div class="req-title">${esc(r.animal_label || 'Animal')} — ${esc(r.diagnosis || 'No diagnosis recorded')}</div>
+    <div class="req-meta">${new Date(r.created_at.replace(' ', 'T') + 'Z').toLocaleDateString()} · Dr. ${esc(r.vet_name || '—')}</div>
+    <p style="margin-top:.4rem;font-size:.9rem"><b>Treatment:</b> ${esc(r.treatment || '—')}${r.follow_up_date ? `<br><b>Follow-up:</b> ${esc(r.follow_up_date)}` : ''}</p></div>`).join('') || '<div class="empty">No records yet — they appear after a visit.</div>';
+}
+
+function openRequest(urgency) {
+  const f = $('#req-form'); f.reset();
+  if (urgency) f.querySelector(`[name=urgency][value=${urgency}]`).checked = true;
+  $('#req-modal').classList.add('open');
+}
+['btn-emergency', 'qa-emergency'].forEach(id => $('#' + id).onclick = () => openRequest('emergency'));
+$('#qa-routine').onclick = () => openRequest('routine'); $('#btn-new').onclick = () => openRequest();
+$('#rf-animal').onchange = e => { const o = e.target.selectedOptions[0]; if (o.dataset.species) $('#rf-species').value = o.dataset.species; };
+
+initLocationButton($('#req-form'));
+$('#req-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(e.target));
+  d.lat = d.lat ? Number(d.lat) : undefined; d.lng = d.lng ? Number(d.lng) : undefined;
+  try {
+    const r = await api('/requests', 'POST', d);
+    $('#req-modal').classList.remove('open');
+    toast(r.vets_notified ? `✓ Sent — ${r.vets_notified} nearby vet${r.vets_notified > 1 ? 's' : ''} alerted` : 'Request saved — no vets in range right now, we will keep it open', r.vets_notified ? 'ok' : 'alert');
+    loadRequests(); show('requests');
+  } catch (err) { toast(err.message, 'err'); }
+});
+$('#animal-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  try { await api('/animals', 'POST', Object.fromEntries(new FormData(e.target))); e.target.reset(); loadAnimals(); toast('Animal saved'); } catch (err) { toast(err.message, 'err'); }
+});
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-del],[data-cancel],[data-chat]'); if (!b) return;
+  try {
+    if (b.dataset.del) { await api('/animals/' + b.dataset.del, 'DELETE'); loadAnimals(); }
+    if (b.dataset.cancel && confirm('Cancel this request?')) { await api('/requests/' + b.dataset.cancel, 'PATCH', { action: 'cancel' }); loadRequests(); }
+    if (b.dataset.chat) Chat.open(requests.find(r => r.id == b.dataset.chat), me);
+  } catch (err) { toast(err.message, 'err'); }
+});
+$('#btn-relocate').onclick = async () => {
+  try { const p = await getPosition(); await api('/me/location', 'PUT', p); toast('Location updated'); loadVets(); } catch (e) { toast(e.message, 'err'); }
+};
+
+connectRealtime({
+  'request:update': r => { const i = requests.findIndex(x => x.id === r.id); i >= 0 ? requests[i] = r : requests.unshift(r); renderRequests();
+    if (r.status === 'accepted') toast(`🩺 ${r.vet_name} accepted your request`); if (r.status === 'completed') toast('✓ Visit completed'); },
+  'message:new': m => Chat.onIncoming(m),
+  'vets:changed': loadVets,
+  'record:changed': () => { if (!$('[data-panel=records]').hidden) loadRecords(); }
+});
+loadAnimals(); loadRequests(); loadVets();
+</script>
+</body>
+</html>

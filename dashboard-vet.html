@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — VetConnect Kenya</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-row">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21c-4-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-3 7.5-7 10Z" stroke="#F5F1E4" stroke-width="1.6"/></svg></span>
+      <span class="brand-name">VetConnect<small>Kenya</small></span>
+    </a>
+    <div class="header-actions"><span style="font-size:.85rem;color:var(--muted)"><span class="live-dot"></span>Live</span><a href="#" data-logout class="btn btn-outline">Log out</a></div>
+  </div>
+</header>
+
+<div class="dash-shell">
+  <aside class="dash-side">
+    <div class="who"><div class="name" data-user-name>Doctor</div><div class="role">Veterinarian account</div></div>
+    <a class="dash-link" data-view="incoming">📨 Incoming requests <span class="count" id="c-in"></span></a>
+    <a class="dash-link" data-view="mine">🩺 My cases <span class="count" id="c-mine"></span></a>
+    <a class="dash-link" data-view="records">🗂 Treatment records</a>
+    <a class="dash-link" data-view="area">🗺 Service area</a>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-header">
+      <div><h1>Welcome back, <span data-user-name>Doctor</span></h1><p>Open requests within range appear here instantly, nearest first.</p></div>
+      <label class="btn btn-outline" style="cursor:pointer"><input type="checkbox" id="avail" style="width:auto;margin-right:.4rem" /> Available for new requests</label>
+    </div>
+    <div class="banner-tip" data-welcome-banner style="display:none;"><span class="icon">🎉</span><div><h4>Your profile is live</h4><p>Farmers near your base location can now see and request you.</p></div></div>
+
+    <section data-panel="incoming">
+      <div class="dash-grid">
+        <div class="stat-card"><div class="num" id="s-new">–</div><div class="label">Open requests near you</div></div>
+        <div class="stat-card"><div class="num" id="s-active">–</div><div class="label">Your active cases</div></div>
+        <div class="stat-card"><div class="num" id="s-done">–</div><div class="label">Completed visits</div></div>
+      </div>
+      <div class="panel"><h3>Incoming requests</h3><div id="in-list"></div></div>
+    </section>
+
+    <section data-panel="mine"><div class="panel"><h3>My cases</h3><div id="mine-list"></div></div></section>
+
+    <section data-panel="records">
+      <div class="panel"><div class="head"><h3>Treatment records</h3><button class="btn btn-primary btn-sm" data-open="rec-modal" id="btn-addrec">+ Add record</button></div><div id="rec-list"></div></div>
+    </section>
+
+    <section data-panel="area">
+      <div class="panel">
+        <h3>Your base location</h3>
+        <p style="margin:.4rem 0 1rem;font-size:.9rem">Requests within about 60 km of this point are sent to you. Currently saved: <b id="loc-now"></b></p>
+        <button class="btn btn-primary" id="btn-loc">📍 Set base to my current location</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Add record -->
+<div class="modal-backdrop" id="rec-modal">
+  <div class="modal-box wide">
+    <h3>Log treatment record</h3>
+    <form id="rec-form">
+      <input type="hidden" name="request_id" />
+      <div class="field"><label>Case</label><select id="rec-case"></select></div>
+      <div class="field"><label>Animal details</label><input name="animal_info" placeholder="e.g. Friesian cow, 4 yrs, tag 112" /></div>
+      <div class="field"><label>Diagnosis</label><textarea name="diagnosis" required></textarea></div>
+      <div class="field"><label>Treatment given</label><textarea name="treatment" required></textarea></div>
+      <div class="field"><label>Follow-up date</label><input type="date" name="follow_up_date" /></div>
+      <div class="modal-actions"><button type="button" class="btn btn-outline" data-close-modal>Cancel</button><button class="btn btn-primary">Save record</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- Chat -->
+<div class="modal-backdrop" id="chat-modal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;gap:1rem"><div><h3 id="chat-title" style="margin:0">Chat</h3><div id="chat-sub" style="font-size:.82rem;color:var(--muted)"></div></div><button class="btn btn-outline btn-sm" data-chat-close>Close</button></div>
+    <div id="chat-log"></div>
+    <div id="chat-appt-wrap" class="chat-opts"><input type="datetime-local" id="appt-when" /><button type="button" class="btn btn-outline btn-sm" id="appt-btn">📅 Set appointment</button></div>
+    <div id="chat-advice-wrap" class="chat-opts"><label><input type="checkbox" id="chat-advice" /> Send as 💊 treatment advice</label></div>
+    <form id="chat-form"><input type="text" id="chat-input" placeholder="Type a message…" autocomplete="off" /><button class="btn btn-primary">Send</button></form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+const me = requireRole('vet');
+let requests = [];
+$('#avail').checked = true;
+const show = initTabs(v => { if (v === 'records') loadRecords(); });
+const km = r => r.distance_km != null ? `📍 ${r.distance_km} km away` : '';
+
+function card(r, mode) {
+  let btns = '';
+  if (r.status === 'pending' && !r.vet_id) btns = `<button class="btn btn-primary btn-sm" data-act="accept" data-id="${r.id}">Accept</button>`;
+  else if (r.vet_id === me.id) {
+    btns = `<button class="btn btn-primary btn-sm" data-chat="${r.id}">💬 Chat</button>`;
+    if (r.status === 'accepted') btns += `<button class="btn btn-accent btn-sm" data-act="start" data-id="${r.id}">Start visit</button><button class="btn btn-outline btn-sm" data-act="decline" data-id="${r.id}">Release</button>`;
+    if (r.status === 'in_progress') btns += `<button class="btn btn-accent btn-sm" data-act="complete" data-id="${r.id}">Mark completed</button>`;
+    if (r.status === 'completed') btns += `<button class="btn btn-outline btn-sm" data-rec="${r.id}">Log record</button>`;
+  }
+  return `<div class="req-card ${r.urgency}"><div class="req-top"><div><div class="req-title">${esc(r.species)} — ${esc(r.problem)}</div>
+    <div class="req-meta">Farmer: ${esc(r.farmer_name)} · ${esc(r.county || '')}${r.location_text ? ' · ' + esc(r.location_text) : ''} · ${km(r)} · ${timeAgo(r.created_at)}${r.scheduled_at ? ' · 📅 ' + esc(r.scheduled_at.replace('T', ' ')) : ''}</div></div>
+    <div>${urgencyPill(r.urgency)} ${statusPill(r.status)}</div></div><div class="req-actions">${btns}</div></div>`;
+}
+const rank = { emergency: 0, urgent: 1, routine: 2 };
+function render() {
+  const open = requests.filter(r => r.status === 'pending' && !r.vet_id).sort((a, b) => rank[a.urgency] - rank[b.urgency] || (a.distance_km ?? 1e9) - (b.distance_km ?? 1e9));
+  const mine = requests.filter(r => r.vet_id === me.id);
+  const active = mine.filter(r => ['accepted', 'in_progress'].includes(r.status));
+  $('#s-new').textContent = open.length; $('#c-in').textContent = open.length || '';
+  $('#s-active').textContent = active.length; $('#c-mine').textContent = active.length || '';
+  $('#s-done').textContent = mine.filter(r => r.status === 'completed').length;
+  $('#in-list').innerHTML = open.map(r => card(r)).join('') || '<div class="empty">No open requests in your area right now. New ones will pop up here live.</div>';
+  $('#mine-list').innerHTML = mine.map(r => card(r)).join('') || '<div class="empty">You have not accepted any cases yet.</div>';
+}
+async function load() { requests = await api('/requests'); render(); }
+async function loadRecords() {
+  const rows = await api('/records');
+  $('#rec-list').innerHTML = rows.map(r => `<div class="req-card"><div class="req-title">${esc(r.farmer_name)} — ${esc(r.animal_label || 'Animal')}</div>
+    <p style="font-size:.9rem;margin-top:.3rem"><b>Diagnosis:</b> ${esc(r.diagnosis)}<br><b>Treatment:</b> ${esc(r.treatment)}${r.follow_up_date ? `<br><b>Follow-up:</b> ${esc(r.follow_up_date)}` : ''}</p></div>`).join('') || '<div class="empty">No records yet.</div>';
+}
+function openRecord(reqId) {
+  const done = requests.filter(r => r.vet_id === me.id);
+  $('#rec-case').innerHTML = done.map(r => `<option value="${r.id}" ${r.id == reqId ? 'selected' : ''}>${esc(r.farmer_name)} — ${esc(r.species)} (${r.status})</option>`).join('') || '<option value="">No cases yet</option>';
+  $('#rec-modal').classList.add('open');
+}
+$('#btn-addrec').onclick = () => openRecord();
+$('#rec-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(e.target)); d.request_id = $('#rec-case').value;
+  try { await api('/records', 'POST', d); $('#rec-modal').classList.remove('open'); e.target.reset(); toast('Record saved'); loadRecords(); } catch (err) { toast(err.message, 'err'); }
+});
+
+document.addEventListener('click', async e => {
+  const b = e.target.closest('[data-act],[data-chat],[data-rec]'); if (!b) return;
+  try {
+    if (b.dataset.act) { await api('/requests/' + b.dataset.id, 'PATCH', { action: b.dataset.act }); if (b.dataset.act === 'accept') toast('✓ Accepted — say hello in chat'); load(); }
+    if (b.dataset.chat) Chat.open(requests.find(r => r.id == b.dataset.chat), me);
+    if (b.dataset.rec) openRecord(b.dataset.rec);
+  } catch (err) { toast(err.message, 'err'); load(); }
+});
+$('#appt-btn').onclick = async () => {
+  const when = $('#appt-when').value; if (!when) return toast('Pick a date and time', 'err');
+  try { await api('/requests/' + Chat.reqId, 'PATCH', { action: 'schedule', scheduled_at: when }); toast('Appointment sent to farmer'); } catch (e) { toast(e.message, 'err'); }
+};
+$('#avail').onchange = async e => { try { await api('/me/availability', 'PUT', { available: e.target.checked }); toast(e.target.checked ? 'You are available' : 'You are hidden from new requests'); } catch (err) { toast(err.message, 'err'); } };
+$('#btn-loc').onclick = async () => {
+  try { const p = await getPosition(); const u = await api('/me/location', 'PUT', p); Session.set(Session.token, u); $('#loc-now').textContent = `${u.lat.toFixed(3)}, ${u.lng.toFixed(3)}`; toast('Base location updated'); load(); } catch (e) { toast(e.message, 'err'); }
+};
+api('/me').then(u => { $('#avail').checked = u.available; $('#loc-now').textContent = u.lat != null ? `${u.lat.toFixed(3)}, ${u.lng.toFixed(3)} (${u.county})` : 'not set'; });
+
+connectRealtime({
+  'request:new': r => { requests.unshift(r); render(); toast(`${r.urgency === 'emergency' ? '🚨 Emergency' : '📨 New request'}: ${r.species} — ${r.distance_km} km away`, r.urgency === 'emergency' ? 'alert' : 'ok'); },
+  'request:update': r => { const i = requests.findIndex(x => x.id === r.id); const prev = i >= 0 ? requests[i] : null;
+    if (r.vet_id === me.id || prev) { r.distance_km = prev ? prev.distance_km : r.distance_km; i >= 0 ? requests[i] = r : requests.unshift(r); render(); } },
+  'request:taken': ({ id }) => { requests = requests.filter(r => !(r.id === id && r.vet_id !== me.id)); render(); },
+  'message:new': m => Chat.onIncoming(m)
+});
+load();
+</script>
+</body>
+</html>
